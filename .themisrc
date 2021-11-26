@@ -1,0 +1,36 @@
+" vim: ft=vim
+
+if $THEMIS_PROFILE !=# ''
+  execute 'profile' 'start' $THEMIS_PROFILE
+  profile! file plugin/*
+  profile! file autoload/*
+endif
+
+source plugin/toggle_values.vim
+
+let g:toggle_values = {
+\   'filetypes': {
+\        '': [
+\             ['True', 'False'],
+\             ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+\             {'ignore_case': v:true, 'values': ['yes', 'no']},
+\             ['not True', 'not False', 'and True', 'and False'],
+\        ],
+\        'ignore': {
+\          'ignore_case': v:true,
+\          'extend': [''],
+\          'keep_case': v:false,
+\          'definitions': [
+\             ['True', 'False'],
+\             {'ignore_case': v:false, 'values': ['vi', 'vim']},
+\             {'ignore_case': v:true, 'keep_case': v:true, 'values': ['on', 'off']}
+\           ]
+\        }
+\    },
+\   'languages': {
+\        'en': [
+\             ['TODO', 'INPROGRESS', 'DONE']
+\        ]
+\    }
+\}
+

@@ -1,0 +1,6 @@
+[run]
+plugins = covimerage
+data_file = build/covimerage
+
+[html]
+directory = build/htmlcov
