@@ -77,14 +77,17 @@ function s:get_marks_text(left, right) abort
     return join(l:lines, "\n")
 endfunction
 
-function! s:split_at_dot(text) abort
+function! s:split_at(text, separator) abort
+  if a:separator ==# '.'
     return split(a:text, '\.')
+  end
+  return split(a:text, a:separator)
 endfunction
 
-function! s:get_next_value_for_ruleset(value, ruletype, rulekey, count) abort
+function! s:get_next_value_for_ruleset(value, ruletype, rulekey, separator, count) abort
     let l:next_value = s:get_next_match_for_rule(a:value, a:ruletype, a:rulekey, a:count)
-    if l:next_value ==# v:null && stridx(a:rulekey, '.') !=# -1
-        for l:subrulekey in s:split_at_dot(a:rulekey)
+    if l:next_value ==# v:null && stridx(a:rulekey, a:separator) !=# -1
+        for l:subrulekey in s:split_at(a:rulekey, a:separator)
             let l:next_value = s:get_next_match_for_rule(a:value, a:ruletype, l:subrulekey, a:count)
             if l:next_value !=# v:null
                 return l:next_value
@@ -98,9 +101,9 @@ function! s:get_next_value_for_buffer(value, count) abort
     if a:value ==# ''
         return v:null
     end
-    let l:next_value = s:get_next_value_for_ruleset(a:value, 'filetypes', &filetype, a:count)
+    let l:next_value = s:get_next_value_for_ruleset(a:value, 'filetypes', &filetype, '.', a:count)
     if l:next_value ==# v:null
-        let l:next_value = s:get_next_value_for_ruleset(a:value, 'languages', &spelllang, a:count)
+        let l:next_value = s:get_next_value_for_ruleset(a:value, 'languages', &spelllang, ',', a:count)
     endif
     return l:next_value
 endfunction
