@@ -15,7 +15,8 @@ Plugin to toggle/cycle between values in the buffer.
   and first matching rule is used)
 - rules can be made case-insensitive per `&filetype` or `&spelllang` level
   or just per rule level
-- rules can extend other rules (e.g. rules for `cpp` might extend `c` rules)
+- rules can extend other rules (e.g. rules for `cpp` might extend `c` rules); by
+  default `extends: ['']`
 - rules can specify that toggled value inherits casing of original world (only 
   useful if rule is also case insensitive)
 - code is covered with tests
@@ -58,7 +59,7 @@ let g:toggle_values = {
 
 Rules can be either specified as list or dictionary. Using dictionary allows finer control over rule behaviour.
 
-Fields `ignore_case` and `keep_case` can be added at definition or rule level. By default, both are false.
+Fields `ignore_case` and `keep_case` can be added at definition or rule level. By default, both are `v:false`.
 
 ## Licence
 Copyright (c) fenuks. Distributed under the same terms as Vim itself. See `:help license`.

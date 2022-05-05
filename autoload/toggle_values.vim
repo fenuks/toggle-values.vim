@@ -32,17 +32,17 @@ function! s:next_list_item(values, word, ignore_case, keep_case, count) abort
     return l:next
 endfunction
 
-function! s:get_next_match_for_rule(word, ruletype, rulename, count) abort
+function! s:get_next_match_for_rule(word, ruletype, rulename, count, tried_rulenames) abort
     let l:definitions = get(g:toggle_values, a:ruletype, {})
     let l:definition = get(l:definitions, a:rulename, [])
     let l:rules = l:definition
-    let l:extend = []
+    let l:extend = ['']
     let l:definition_ignore_case = v:false
     let l:definition_keep_case = v:false
     if type(l:definition) ==# v:t_dict
         let l:definition_ignore_case = get(l:definition, 'ignore_case', v:false)
         let l:rules = get(l:definition, 'definitions', [])
-        let l:extend = get(l:definition, 'extend', [])
+        let l:extend = get(l:definition, 'extend', [''])
         let l:definition_keep_case = get(l:definition, 'keep_case', v:false)
     endif
     for l:rule in l:rules
@@ -59,7 +59,11 @@ function! s:get_next_match_for_rule(word, ruletype, rulename, count) abort
         endif
     endfor
     for l:extended_rulename in l:extend
-        return s:get_next_match_for_rule(a:word, a:ruletype, l:extended_rulename, a:count)
+        if index(a:tried_rulenames, l:extended_rulename) != -1
+          continue
+        endif
+        call add(a:tried_rulenames, l:extended_rulename)
+        return s:get_next_match_for_rule(a:word, a:ruletype, l:extended_rulename, a:count, a:tried_rulenames)
     endfor
     return v:null
 endfunction
@@ -85,10 +89,10 @@ function! s:split_at(text, separator) abort
 endfunction
 
 function! s:get_next_value_for_ruleset(value, ruletype, rulekey, separator, count) abort
-    let l:next_value = s:get_next_match_for_rule(a:value, a:ruletype, a:rulekey, a:count)
+    let l:next_value = s:get_next_match_for_rule(a:value, a:ruletype, a:rulekey, a:count, [])
     if l:next_value ==# v:null && stridx(a:rulekey, a:separator) !=# -1
         for l:subrulekey in s:split_at(a:rulekey, a:separator)
-            let l:next_value = s:get_next_match_for_rule(a:value, a:ruletype, l:subrulekey, a:count)
+            let l:next_value = s:get_next_match_for_rule(a:value, a:ruletype, l:subrulekey, a:count, [])
             if l:next_value !=# v:null
                 return l:next_value
             endif

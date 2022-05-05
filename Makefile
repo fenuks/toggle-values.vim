@@ -17,11 +17,11 @@ view: build/htmlcov/index.html
 	/usr/bin/chromium $^
 
 
-$(PROFILE): $(THEMIS) build/ $(wildcard tests/*.vim) $(wildcard plugin/*.vim) $(wildcard autoload/*.vim)
-	THEMIS_PROFILE=$@ $^ --runtimepath $(THEMIS) --runtimepath . --exclude themis -r tests/
+$(PROFILE): themis/ build/ $(wildcard tests/*.vim) $(wildcard plugin/*.vim) $(wildcard autoload/*.vim)
+	THEMIS_PROFILE=$@ $(THEMIS) --runtimepath themis --runtimepath . --exclude themis/ -r tests/
 
-$(THEMIS):
-	git clone --depth 1 https://github.com/thinca/vim-themis $(THEMIS)
+themis/:
+	git clone --depth 1 https://github.com/thinca/vim-themis themis
 
 build/:
 	mkdir -p build
@@ -29,3 +29,4 @@ build/:
 clean:
 	rm -f $(PROFILE)
 	rm -rf build/
+	rm -rf themis/

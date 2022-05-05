@@ -27,17 +27,6 @@ function! s:suite.ToggleValueNormal_count()
     call s:assert.equals(getline(1, '$'), ['Monday 1', 'unrelated', ''])
 endfunction
 
-function! s:suite.ToggleValueNormal_doesnt_inherit_empty_filetype_rules()
-    set filetype=nonexisting
-    % delete _
-    0put ='Monday 1'
-    1put ='unrelated'
-    call setpos('.', [0, 1, 1, 0])
-    normal gt
-    call s:assert.equals(getline(1, '$'), ['Monday 1', 'unrelated', ''])
-    setlocal filetype=
-endfunction
-
 function! s:suite.ToggleValueNormal_emptyFile()
     % delete _
     normal gt
@@ -64,13 +53,13 @@ function! s:suite.ToggleValueVisual_unknown_selection()
     call s:assert.equals(getline(1, '$'), ['unknown 1', 'unrelated', ''])
 endfunction
 
-" doesn't work for some reason, even though it works in real vim
-function! s:suite.ToggleValueOperator()
-    setlocal filetype=
-    % delete _
-    0put ='not True 1'
-    1put ='unrelated'
-    call setpos('.', [0, 1, 1, 0])
-    normal gr2e
-    call s:assert.equals(getline(1, '$'), ['not False 1', 'unrelated', ''])
-endfunction
+" doesn't work since normal gr2e doesn't work with operator pending mapping
+" function! s:suite.ToggleValueOperator()
+"     setlocal filetype=
+"     % delete _
+"     0put ='not True 1'
+"     1put ='unrelated'
+"     call setpos('.', [0, 1, 1, 0])
+"     normal gr2e
+"     call s:assert.equals(getline(1, '$'), ['not False 1', 'unrelated', ''])
+" endfunction
